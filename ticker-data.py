@@ -1,7 +1,7 @@
 import ccxt
 
-api_key = 'BqFWu1dFEidOphVrx6yCGTycDAlAdTWEXhWKUXkJ'
-api_key_secret = 'v8EJw2iVA3b3RFEKFfcUPlpSZiYvtkrImUPe4bX0'
+api_key = ''
+api_key_secret = ''
 
 exchange = ccxt.ftx({
     'enableRateLimit': True,  # required by the Manual https://github.com/ccxt/ccxt/wiki/Manual#rate-limit
