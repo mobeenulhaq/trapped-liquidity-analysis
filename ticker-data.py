@@ -4,8 +4,8 @@ import asyncio
 
 now = datetime.now()
 
-api_key = 'Qakt0Dh_oNKRMgaTWptaVch8DtYcBBZ5FDVHL5rV'
-api_key_secret = 'FCBCpGNIOk8fV49QNEHYmmC3qS18_dQ_pT16R3Xs'
+api_key = ''
+api_key_secret = ''
 
 exchange = ccxt.ftx({
     'enableRateLimit': True,  # required by the Manual https://github.com/ccxt/ccxt/wiki/Manual#rate-limit
