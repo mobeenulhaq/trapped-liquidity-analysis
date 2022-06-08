@@ -1,7 +1,11 @@
 import ccxt
+from datetime import datetime
+import asyncio
 
-api_key = ''
-api_key_secret = ''
+now = datetime.now()
+
+api_key = 'Qakt0Dh_oNKRMgaTWptaVch8DtYcBBZ5FDVHL5rV'
+api_key_secret = 'FCBCpGNIOk8fV49QNEHYmmC3qS18_dQ_pT16R3Xs'
 
 exchange = ccxt.ftx({
     'enableRateLimit': True,  # required by the Manual https://github.com/ccxt/ccxt/wiki/Manual#rate-limit
@@ -12,10 +16,30 @@ exchange = ccxt.ftx({
     },
 })
 
-# print(dir(publicGetFuturesFutureNameStats))
-#print(exchange.fetch_funding_rate(symbol ='BTC-PERP', params = {'datetime' : '2022-01-05T16:00:00+00:00'}))
+# fetching ticker price
+async def price_coroutine():
+    while True:
+        now = datetime.now()
+        await asyncio.sleep(60) # data needs to be plotted and analysed per 6o seconds
+        price = exchange.fetch_ticker("BTC-PERP")['info']['price']
+        print(price, now)
 
-ticker = input("Enter ticker: ")
-ticker = ticker.upper() + "-PERP"
+# fetching ticker open interest
+async def oi_coroutine():
+    while True:
+        now = datetime.now()
+        await asyncio.sleep(60)
+        oi = exchange.fetch_funding_rate(symbol = "BTC-PERP", params = {'datetime' : now})['info']['openInterest']
+        print(oi, now)
 
-oi = exchange.fetch_funding_rate(symbol = ticker, params = {'datetime' : '2022-01-05T16:00:00+00:00'})['info']['openInterest']
+loop = asyncio.get_event_loop()
+
+try:
+    asyncio.ensure_future(price_coroutine())
+    asyncio.ensure_future(oi_coroutine())
+    loop.run_forever()
+except KeyboardInterrupt:
+    pass
+finally:
+    print("Closing Loop")
+    loop.close()
