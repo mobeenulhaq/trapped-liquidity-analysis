@@ -1,11 +1,14 @@
 import ccxt
 from datetime import datetime
 import asyncio
+import csv
+
+from requests import head
 
 now = datetime.now()
 
-api_key = ''
-api_key_secret = ''
+api_key = 'Qakt0Dh_oNKRMgaTWptaVch8DtYcBBZ5FDVHL5rV'
+api_key_secret = 'FCBCpGNIOk8fV49QNEHYmmC3qS18_dQ_pT16R3Xs'
 
 exchange = ccxt.ftx({
     'enableRateLimit': True,  # required by the Manual https://github.com/ccxt/ccxt/wiki/Manual#rate-limit
@@ -16,27 +19,23 @@ exchange = ccxt.ftx({
     },
 })
 
-# fetching ticker price
-async def price_coroutine():
-    while True:
-        now = datetime.now()
-        await asyncio.sleep(60) # data needs to be plotted and analysed per 6o seconds
-        price = exchange.fetch_ticker("BTC-PERP")['info']['price']
-        print(price, now)
+file_name = "btc-price-oi.csv"
 
-# fetching ticker open interest
-async def oi_coroutine():
-    while True:
-        now = datetime.now()
-        await asyncio.sleep(60)
-        oi = exchange.fetch_funding_rate(symbol = "BTC-PERP", params = {'datetime' : now})['info']['openInterest']
-        print(oi, now)
+# file appending function
+async def price_oi_coroutine():
+    with open(file_name, 'a', newline="") as f:
+        writer = csv.writer(f)
+        while True:
+            now = datetime.now()
+            await asyncio.sleep(60) # data needs to be plotted and analysed per 6o seconds
+            price = exchange.fetch_ticker("BTC-PERP")['info']['price']
+            oi = exchange.fetch_funding_rate(symbol = "BTC-PERP", params = {'datetime' : now})['info']['openInterest']
+            writer.writerow([now, price, oi])
 
 loop = asyncio.get_event_loop()
 
 try:
-    asyncio.ensure_future(price_coroutine())
-    asyncio.ensure_future(oi_coroutine())
+    asyncio.ensure_future(price_oi_coroutine())
     loop.run_forever()
 except KeyboardInterrupt:
     pass
