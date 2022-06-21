@@ -1,6 +1,7 @@
 import ftxdata
 from datetime import datetime
 import csv
+import time
 
 class FileWriter:
 
@@ -18,9 +19,12 @@ class FileWriter:
 
 if __name__ == "__main__":
 
-    path = 'price-oi.csv'
+    path = 'btc-data.csv'
     fwriter = FileWriter(path)
     data = ftxdata.Data()
-    fwriter.fileAppend(data)
+    
+    while True:
+        fwriter.fileAppend(data)
+        time.sleep(60)
 
     
