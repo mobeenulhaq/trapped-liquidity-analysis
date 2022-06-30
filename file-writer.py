@@ -1,4 +1,4 @@
-import ftxdata
+import ftxresponse
 from datetime import datetime
 import csv
 import time
@@ -15,16 +15,16 @@ class FileWriter:
         with open(self.filename, 'a', newline="") as f:
             writer = csv.writer(f)
             now = datetime.now()
-            writer.writerow([now, data.get_price(), data.get_oi()])
+            writer.writerow([now.timestamp(), data.get_price(), data.get_oi()])
 
 if __name__ == "__main__":
 
     path = 'btc-data.csv'
     fwriter = FileWriter(path)
-    data = ftxdata.Data()
+    data = ftxresponse.Data()
     
     while True:
         fwriter.fileAppend(data)
-        time.sleep(60)
+        time.sleep(1)
 
     
