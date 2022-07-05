@@ -1,22 +1,19 @@
-from sqlite3 import Row
 import numpy as np
 from dynarray import DynamicArray
 from datetime import datetime
 import time
 import ftxresponse
-import csv
 
 def data_writer(data):
-    data_matrix = DynamicArray((None, 3))
-
-    while True:
-        data_matrix.append(np.array(data))
+    data_matrix.append(np.array([datetime.now().timestamp(), data.get_oi(), data.get_price()]))
 
 
 if __name__ == "__main__":
 
+    data_matrix = DynamicArray((None, 3))
     data = ftxresponse.Data()
     
     while True:
-        
-        time.sleep(1)
+        data_writer(data)
+        time.sleep(60)
+        #print(data_matrix)
